@@ -1,0 +1,208 @@
+{
+  "envelopes": [
+    {
+      "id": 1,
+      "name": "Cash",
+      "function_ids": [1, 2, 4]
+    },
+    {
+      "id": 2,
+      "name": "Investment",
+      "function_ids": [3, 5]
+    }
+  ],
+  "functions": [
+    {
+      "id": 1,
+      "type": "inflow",
+      "parameters": [
+        {
+          "id": 1,
+          "type": "time",
+          "value": 1
+        },
+        {
+          "id": 2,
+          "type": "money",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "outflow",
+      "parameters": [
+        {
+          "id": 3,
+          "type": "time",
+          "value": 5
+        },
+        {
+          "id": 4,
+          "type": "money",
+          "value": 20
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "inflow",
+      "parameters": [
+        {
+          "id": 5,
+          "type": "time",
+          "value": 15
+        },
+        {
+          "id": 6,
+          "type": "money",
+          "value": 10
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "outflow",
+      "parameters": [
+        {
+          "id": 7,
+          "type": "time",
+          "value": 3
+        },
+        {
+          "id": 8,
+          "type": "money",
+          "value": 50
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "compound_invest_inflow",
+      "parameters": [
+        {
+          "id": 9,
+          "type": "time",
+          "value": 3
+        },
+        {
+          "id": 10,
+          "type": "money",
+          "value": 50
+        },
+        {
+          "id": 11,
+          "type": "rate",
+          "value": 0.05
+        }
+      ]
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "type": "pay_check",
+      "description": "Cash income of $20",
+      "parameters": [
+        {
+          "id": 1,
+          "type": "time",
+          "value": 1,
+          "id_parameter": 1,
+          "id_function": 1
+        },
+        {
+          "id": 2,
+          "type": "money",
+          "value": 20,
+          "id_parameter": 2,
+          "id_function": 1
+        }
+      ]
+    },
+    {
+      "id": 2,
+      "type": "purchase",
+      "description": "Cash spending of $20",
+      "parameters": [
+        {
+          "id": 3,
+          "type": "time",
+          "value": 5,
+          "id_parameter": 3, 
+          "id_function": 2
+        },
+        {
+          "id": 4,
+          "type": "money",
+          "value": 20,
+          "id_parameter": 4,
+          "id_function": 2
+        }
+      ]
+    },
+    {
+      "id": 3,
+      "type": "pay_check",
+      "description": "Investment income of $10",
+      "parameters": [
+        {
+          "id": 5,
+          "type": "time",
+          "value": 15,
+          "id_parameter": 5,
+          "id_function": 3
+        },
+        {
+          "id": 6,
+          "type": "money",
+          "value": 10,
+          "id_parameter": 6,
+          "id_function": 3
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "compound_investment",
+      "description": "Invest $50 in compound interest account at 5%",
+      "parameters": [
+        {
+          "id": 7,
+          "type": "time",
+          "value": 3,
+          "id_parameter": 7,
+          "id_function": 4
+        },
+        {
+          "id": 8,
+          "type": "money",
+          "value": 50,
+          "id_parameter": 8,
+          "id_function": 4
+        },
+        {
+          "id": 9,
+          "type": "time",
+          "value": 3,
+          "id_parameter": 9,
+          "id_function": 5
+        },
+        {
+          "id": 10,
+          "type": "money",
+          "value": 50,
+          "id_parameter": 10,
+          "id_function": 5
+        },
+        {
+          "id": 11,
+          "type": "rate",
+          "value": 0.05,
+          "id_parameter": 11,
+          "id_function": 5
+        }
+      ]
+    }
+  ]
+}
