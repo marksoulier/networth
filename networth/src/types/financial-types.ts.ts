@@ -1,13 +1,20 @@
 // Types for financial simulation
 
 // Parameter types
-export type ParameterType = 'time' | 'money' | 'rate';
+export type ParameterType = 'time' | 'money' | 'rate' | 'interval' | 'end_time';
 
 // Function types
-export type FunctionType = 'inflow' | 'outflow' | 'compound_invest_inflow' | 'compound_invest_outflow';
+export type FunctionType = 
+  | 'inflow' 
+  | 'outflow' 
+  | 'compound_invest_inflow' 
+  | 'compound_invest_outflow' 
+  | 'recurring_inflow'
+  | 'recurring_outflow'
+  | '';
 
 // Event types
-export type EventType = 'purchase' | 'pay_check';
+export type EventType = 'purchase' | 'pay_check' | 'compound_investment' | 'having_a_baby' | 'getting_a_job' | 'ending_a_job' | 'groceries';
 
 // Parameter inside a function
 export interface FunctionParameter {

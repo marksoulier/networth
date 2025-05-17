@@ -12,7 +12,7 @@ interface Datum {
  * @param timeRange Number of months to simulate
  * @returns Array of data points representing total value over time
  */
-export const useFinancialSimulation = (financialProblem: FinancialProblem, timeRange: number = 60) => {
+export const useFinancialSimulation = (financialProblem: FinancialProblem, timeRange: number = 1200) => {
   // Basic inflow/outflow functions
   const unitStep = (startTime: number, currentTime: number): number => {
     return currentTime >= startTime ? 1 : 0;
@@ -24,6 +24,23 @@ export const useFinancialSimulation = (financialProblem: FinancialProblem, timeR
 
   const outflow = (amount: number, startTime: number, currentTime: number): number => {
     return -amount * unitStep(startTime, currentTime);
+  };
+
+  // Recurring functions
+  const recurringInflow = (amount: number, startTime: number, endTime: number, currentTime: number, interval: number = 1): number => {
+    let total = 0;
+    for (let t = startTime; t <= endTime; t += interval) {
+      total += inflow(amount, t, currentTime);
+    }
+    return total;
+  };
+
+  const recurringOutflow = (amount: number, startTime: number, endTime: number, currentTime: number, interval: number = 1): number => {
+    let total = 0;
+    for (let t = startTime; t <= endTime; t += interval) {
+      total += outflow(amount, t, currentTime);
+    }
+    return total;
   };
 
   // Compound interest functions
@@ -56,6 +73,26 @@ export const useFinancialSimulation = (financialProblem: FinancialProblem, timeR
             const amountParam = targetFunction.parameters.find(p => p.type === "money");
             if (!timeStartParam || !amountParam) return 0;
             return outflow(amountParam.value, timeStartParam.value, time);
+        }
+        case "recurring_inflow": {
+            // Find time_start, end_time, amount, and interval parameters
+            const timeStartParam = targetFunction.parameters.find(p => p.type === "time");
+            const endTimeParam = targetFunction.parameters.find(p => p.type === "end_time");
+            const amountParam = targetFunction.parameters.find(p => p.type === "money");
+            const intervalParam = targetFunction.parameters.find(p => p.type === "interval");
+            if (!timeStartParam || !endTimeParam || !amountParam) return 0;
+            const interval = intervalParam?.value || 1;
+            return recurringInflow(amountParam.value, timeStartParam.value, endTimeParam.value, time, interval);
+        }
+        case "recurring_outflow": {
+            // Find time_start, end_time, amount, and interval parameters
+            const timeStartParam = targetFunction.parameters.find(p => p.type === "time");
+            const endTimeParam = targetFunction.parameters.find(p => p.type === "end_time");
+            const amountParam = targetFunction.parameters.find(p => p.type === "money");
+            const intervalParam = targetFunction.parameters.find(p => p.type === "interval");
+            if (!timeStartParam || !endTimeParam || !amountParam) return 0;
+            const interval = intervalParam?.value || 1;
+            return recurringOutflow(amountParam.value, timeStartParam.value, endTimeParam.value, time, interval);
         }
         case "compound_invest_inflow": {
             // Find time_start, amount, and rate parameters

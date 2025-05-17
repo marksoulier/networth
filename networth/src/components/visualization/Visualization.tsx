@@ -56,7 +56,7 @@ export function Visualization() {
       envelopes: [],
       functions: [],
       events: []
-    }
+    }, 60
   );
 
   // Don't render visualization until data is loaded
