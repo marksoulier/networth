@@ -4,8 +4,7 @@ import { supabase, type User } from './lib/supabase';
 import AuthModal from './components/auth/AuthModal';
 import WelcomeModal from './components/auth/WelcomeModal';
 import { Visualization } from './components/visualization/Visualization';
-import { TestFinancialData } from './components/TestFinancialData';
-import './App.css';
+import TimelineAnnotation from './components/UI/TimelineAnnotation';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
@@ -60,8 +59,9 @@ function App() {
     <div className="min-h-screen bg-slate-900">
       {/* Main content with blur effect when modals are open */}
       <div className={`relative w-full h-screen ${(showAuthModal || showWelcomeModal) ? 'blur-sm pointer-events-none' : ''}`}>
+        {/* <TimelineAnnotation /> */}
+
         <Visualization />
-        {/* <TestFinancialData /> */}
       </div>
 
       {/* Auth Modal - Cannot be closed by clicking outside */}

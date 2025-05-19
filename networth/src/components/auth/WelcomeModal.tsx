@@ -1,5 +1,4 @@
 import * as Dialog from '@radix-ui/react-dialog';
-import ModalContainer from '../common/ModalContainer';
 
 interface WelcomeModalProps {
   onBegin: () => void;
@@ -9,7 +8,6 @@ const WelcomeModal = ({ onBegin }: WelcomeModalProps) => {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <ModalContainer>
         <div className="text-center space-y-6">
           <Dialog.Title className="text-3xl font-bold text-gray-900">
             Welcome to NetWorth
@@ -29,7 +27,6 @@ const WelcomeModal = ({ onBegin }: WelcomeModalProps) => {
             </button>
           </div>
         </div>
-      </ModalContainer>
     </Dialog.Portal>
   );
 };

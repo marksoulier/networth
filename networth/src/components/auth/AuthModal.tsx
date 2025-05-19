@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { signIn, signUp } from '../../lib/supabase';
-import ModalContainer from '../common/ModalContainer';
 
 const AuthModal = () => {
   const [isSignUp, setIsSignUp] = useState(false);
@@ -31,7 +30,6 @@ const AuthModal = () => {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
-      <ModalContainer>
         <div className="space-y-6">
           <div className="text-center">
             <Dialog.Title className="text-2xl font-bold text-gray-900">
@@ -96,7 +94,6 @@ const AuthModal = () => {
             </div>
           </form>
         </div>
-      </ModalContainer>
     </Dialog.Portal>
   );
 };

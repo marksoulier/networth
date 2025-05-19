@@ -8,6 +8,7 @@ import { extent, bisector } from 'd3-array';
 import { useFinancialSimulation } from '../../hooks/useFinancialSimulator';
 import { useFinancialProblem, loadFinancialProblemFromFile } from '../../hooks/useFinancialProblem';
 import type { FinancialProblem, FinancialEvent } from '../../financial-types.ts.ts';
+import TimelineAnnotation from '../UI/TimelineAnnotation';
 
 interface Datum {
   x: number;
@@ -37,7 +38,7 @@ export function Visualization() {
     const loadData = async () => {
       try {
         setIsLoading(true);
-        const data = await loadFinancialProblemFromFile('/src/assets/financialproblem.json');
+        const data = await loadFinancialProblemFromFile('/networth/assets/financialproblem.json');
         console.log('Loaded Financial Problem:', data);
         setInitialData(data);
       } catch (error) {
@@ -351,6 +352,18 @@ export function Visualization() {
                         stroke="#000"
                         strokeWidth={1}
                       />
+
+                      <foreignObject
+                        x={hoverPos.svgX - 30}
+                        y={hoverPos.svgY - 60}
+                        width={100}
+                        height={100}
+                        style={{ overflow: 'visible' }}
+                      >
+                        <div style={{ width: '100%', height: '100%' }}>
+                          <TimelineAnnotation />
+                        </div>
+                      </foreignObject>
 
                       <text
                         x={hoverPos.svgX - 50}
