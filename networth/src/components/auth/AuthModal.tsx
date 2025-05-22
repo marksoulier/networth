@@ -30,6 +30,7 @@ const AuthModal = () => {
   return (
     <Dialog.Portal>
       <Dialog.Overlay className="fixed inset-0 bg-black/50 backdrop-blur-sm" />
+      {/* <Dialog.Content> */}
         <div className="space-y-6">
           <div className="text-center">
             <Dialog.Title className="text-2xl font-bold text-gray-900">
@@ -94,6 +95,7 @@ const AuthModal = () => {
             </div>
           </form>
         </div>
+      {/* </Dialog.Content> */}
     </Dialog.Portal>
   );
 };

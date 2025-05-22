@@ -4,11 +4,11 @@ import { supabase, type User } from './lib/supabase';
 import AuthModal from './components/auth/AuthModal';
 import WelcomeModal from './components/auth/WelcomeModal';
 import { Visualization } from './components/visualization/Visualization';
-import TimelineAnnotation from './components/UI/TimelineAnnotation';
+import { OverlayControls } from './components/UI/OverlayControls';
 
 function App() {
   const [user, setUser] = useState<User | null>(null);
-  const [showAuthModal, setShowAuthModal] = useState(true);
+  const [showAuthModal, setShowAuthModal] = useState(false);
   const [showWelcomeModal, setShowWelcomeModal] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
 
@@ -19,7 +19,6 @@ function App() {
         const { data: { session } } = await supabase.auth.getSession();
         if (session?.user) {
           setUser(session.user);
-          setShowAuthModal(false);
         }
       } catch (error) {
         console.error('Error checking session:', error);
@@ -33,19 +32,16 @@ function App() {
     // Subscribe to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUser(session?.user ?? null);
-      if (session?.user) {
-        setShowAuthModal(false);
-        setShowWelcomeModal(true);
-      } else {
-        setShowAuthModal(true);
-        setShowWelcomeModal(false);
-      }
     });
 
     return () => {
       subscription.unsubscribe();
     };
   }, []);
+
+  const handleSignOut = async () => {
+    await supabase.auth.signOut();
+  };
 
   if (isLoading) {
     return (
@@ -56,21 +52,20 @@ function App() {
   }
 
   return (
-    <div className="min-h-screen bg-slate-900">
-      {/* Main content with blur effect when modals are open */}
-      <div className={`relative w-full h-screen ${(showAuthModal || showWelcomeModal) ? 'blur-sm pointer-events-none' : ''}`}>
-        {/* <TimelineAnnotation /> */}
-
+    <div className="relative min-h-screen bg-slate-900">
+      {/* Main visualization */}
+      <div className="absolute inset-0">
         <Visualization />
       </div>
 
-      {/* Auth Modal - Cannot be closed by clicking outside */}
-      <Dialog.Root open={showAuthModal} onOpenChange={(open) => {
-        // Only allow closing if user is authenticated
-        if (user) {
-          setShowAuthModal(open);
-        }
-      }}>
+      {/* Overlay controls */}
+      <OverlayControls
+        onSignOut={handleSignOut}
+        onShowWelcome={() => setShowWelcomeModal(true)}
+      />
+
+      {/* Auth Modal */}
+      <Dialog.Root open={showAuthModal} onOpenChange={setShowAuthModal}>
         <AuthModal />
       </Dialog.Root>
 
