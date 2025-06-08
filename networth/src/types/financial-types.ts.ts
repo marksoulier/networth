@@ -4,11 +4,11 @@
 export type ParameterType = 'time' | 'money' | 'rate' | 'interval' | 'end_time';
 
 // Function types
-export type FunctionType = 
-  | 'inflow' 
-  | 'outflow' 
-  | 'compound_invest_inflow' 
-  | 'compound_invest_outflow' 
+export type FunctionType =
+  | 'inflow'
+  | 'outflow'
+  | 'compound_invest_inflow'
+  | 'compound_invest_outflow'
   | 'recurring_inflow'
   | 'recurring_outflow'
   | '';
@@ -32,19 +32,17 @@ export interface FinancialFunction {
 
 // Event parameter (reference to a function parameter)
 export interface EventParameter {
-  id: number; // unique identifier for the event parameter
-  type: ParameterType; // the type of the event parameter
-  value: number; // the value of the event parameter
-  id_parameter: number; // the id of the parameter that is being referenced
-  id_function: number; // the id of the function that is being referenced
+  id: number;
+  type: 'time' | 'money' | 'amount' | 'rate' | 'expected_return' | 'from_key' | 'to_key';
+  value: number | string;
 }
 
 // Events (income/spending)
 export interface FinancialEvent {
-  id: number; // unique identifier for the event
-  type: EventType; // the type of the event
-  description: string; // a description of the event
-  parameters: EventParameter[]; // the parameters of the event, these should have a time_start parameter
+  id: number;
+  type: string;
+  description: string;
+  parameters: EventParameter[];
 }
 
 // Envelope (container for functions)

@@ -1,0 +1,1104 @@
+{
+    "envelopes": [
+        "Cash", 
+        "House",
+        "Savings",
+        "Investments",
+        "Retirement"
+    ],
+    "events": [
+        {
+            "id": 4,
+            "type": "savings_account",
+            "description": "High yield savings account compound interest, accrued daily",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "interest_rate",
+                    "value": 0.05
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 3,
+                    "type": "amount",
+                    "value": 10000
+                },
+                {
+                    "id": 4,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "to_key",
+                    "value": "Savings"
+                }
+            ]
+        },
+        {
+            "id": 1,
+            "type": "get_job",
+            "description": "Initial income of $50,000/year",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "salary",
+                    "value": 50000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 3,
+                    "type": "pay_period",
+                    "value": 26
+                },
+                {
+                    "id": 4,
+                    "type": "federal_income_tax",
+                    "value": 0.15
+                },
+                {
+                    "id": 5,
+                    "type": "state_income_tax",
+                    "value": 0.05
+                },
+                {
+                    "id": 6,
+                    "type": "social_security_tax",
+                    "value": 0.062
+                },
+                {
+                    "id": 7,
+                    "type": "medicare_tax",
+                    "value": 0.0145
+                },
+                {
+                    "id": 8,
+                    "type": "401k_contribution",
+                    "value": 0.05
+                },
+                {
+                    "id": 9,
+                    "type": "401k_match",
+                    "value": 0.05
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 1,
+                    "type": "get_a_raise",
+                    "description": "Get a raise to $55,000/year",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "salary",
+                            "value": 55000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1095
+                        }
+                    ]
+                },
+                {
+                    "id": 2,
+                    "type": "change_401k_contribution",
+                    "description": "Change 401k contribution to 10%",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "401k_contribution",
+                            "value": 0.1
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1095
+                        }
+                    ]
+                },
+                {
+                    "id": 3,
+                    "type": "get_a_bonus",
+                    "description": "Get a bonus of $10,000",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "bonus",
+                            "value": 10000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1095
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "type": "cash_reset",
+            "description": "Resetting cash account to $135,000",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "amount",
+                    "value": 135000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 1095
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "type": "buy_house",
+            "description": "Purchase of $300,000 house with 30-year, 3% loan",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "home_value",
+                    "value": 300000
+                },
+                {
+                    "id": 2,
+                    "type": "loan_term_years",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "type": "loan_rate",
+                    "value": 0.03
+                },
+                {
+                    "id": 4,
+                    "type": "appreciation_rate",
+                    "value": 0.05
+                },
+                {
+                    "id": 5,
+                    "type": "downpayment",
+                    "value": 10000
+                },
+                {
+                    "id": 6,
+                    "type": "time_days",
+                    "value": 730
+                },
+                {
+                    "id": 7,
+                    "type": "property_tax_rate",
+                    "value": 0.015
+                },
+                {
+                    "id": 8,
+                    "type": "property_tax_payment_frequency",
+                    "value": "annual"
+                },
+                {
+                    "id": 9,
+                    "type": "property_tax_escrow",
+                    "value": true
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 301,
+                    "type": "new_appraisal",
+                    "description": "New home appraisal at $450,000",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "appraised_value",
+                            "value": 450000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1825
+                        }
+                    ]
+                },
+                {
+                    "id": 302,
+                    "type": "change_payment",
+                    "description": "Extra mortgage payment of $50,000",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "amount",
+                            "value": 50000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 3650
+                        },
+                        {
+                            "id": 3,
+                            "type": "month_index",
+                            "value": 120
+                        }
+                    ]
+                },
+                {
+                    "id": 303,
+                    "type": "change_payment",
+                    "description": "Late payment made 1 month late",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "amount",
+                            "value": 3400
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 2584
+                        },
+                        {
+                            "id": 3,
+                            "type": "month_index",
+                            "value": 85
+                        }
+                    ]
+                },
+                {
+                    "id": 304,
+                    "type": "sell_house",
+                    "description": "House sold, proceeds converted to cash",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "time_days",
+                            "value": 5475
+                        }
+                    ]
+                },
+                {
+                    "id": 305,
+                    "type": "tornado_damage",
+                    "description": "House damaged by tornado",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "damage_cost",
+                            "value": 75000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1095
+                        },
+                        {
+                            "id": 3,
+                            "type": "insurance_coverage",
+                            "value": 0.9
+                        }
+                    ]
+                },
+                {
+                    "id": 306,
+                    "type": "house_fire",
+                    "description": "House damaged by fire",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "damage_cost",
+                            "value": 100000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1460
+                        },
+                        {
+                            "id": 3,
+                            "type": "insurance_coverage",
+                            "value": 0.95
+                        }
+                    ]
+                },
+                {
+                    "id": 307,
+                    "type": "flood_damage",
+                    "description": "House damaged by flood",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "damage_cost",
+                            "value": 50000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1825
+                        },
+                        {
+                            "id": 3,
+                            "type": "insurance_coverage",
+                            "value": 0.8
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "type": "start_business",
+            "description": "Start a new business with initial investment",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "initial_investment",
+                    "value": 50000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 365
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 501,
+                    "type": "business_income",
+                    "description": "Business starts generating monthly income",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "monthly_income",
+                            "value": 5000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 730
+                        }
+                    ]
+                },
+                {
+                    "id": 502,
+                    "type": "business_loss",
+                    "description": "Business experiences a significant loss",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "loss_amount",
+                            "value": 20000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1095
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "type": "invest_money",
+            "description": "Initial investment in stock market",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "amount",
+                    "value": 25000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 180
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 4,
+                    "type": "to_key",
+                    "value": "Investments"
+                },
+                {
+                    "id": 5,
+                    "type": "expected_return",
+                    "value": 0.08
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 601,
+                    "type": "market_crash",
+                    "description": "Market experiences significant downturn",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "loss_percentage",
+                            "value": 0.2
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 730
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "type": "have_child",
+            "description": "Have a child and associated initial costs",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "initial_costs",
+                    "value": 15000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 365
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 701,
+                    "type": "childcare_costs",
+                    "description": "Monthly childcare expenses begin",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "monthly_cost",
+                            "value": 1200
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 395
+                        }
+                    ]
+                },
+                {
+                    "id": 702,
+                    "type": "college_fund",
+                    "description": "Start college savings fund",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "initial_contribution",
+                            "value": 5000
+                        },
+                        {
+                            "id": 2,
+                            "type": "monthly_contribution",
+                            "value": 200
+                        },
+                        {
+                            "id": 3,
+                            "type": "time_days",
+                            "value": 395
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 8,
+            "type": "buy_car",
+            "description": "Purchase of $35,000 car with 5-year loan",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "car_value",
+                    "value": 35000
+                },
+                {
+                    "id": 2,
+                    "type": "loan_term_years",
+                    "value": 5
+                },
+                {
+                    "id": 3,
+                    "type": "loan_rate",
+                    "value": 0.045
+                },
+                {
+                    "id": 4,
+                    "type": "downpayment",
+                    "value": 10000
+                },
+                {
+                    "id": 5,
+                    "type": "time_days",
+                    "value": 180
+                },
+                {
+                    "id": 6,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 801,
+                    "type": "pay_loan_early",
+                    "description": "Pay off car loan early",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "amount",
+                            "value": 25000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 730
+                        }
+                    ]
+                },
+                {
+                    "id": 802,
+                    "type": "car_accident",
+                    "description": "Car accident requiring major repairs",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "repair_cost",
+                            "value": 8000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 365
+                        },
+                        {
+                            "id": 3,
+                            "type": "insurance_coverage",
+                            "value": 0.8
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 9,
+            "type": "buy_boat",
+            "description": "Purchase of $50,000 boat with 10-year loan",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "boat_value",
+                    "value": 50000
+                },
+                {
+                    "id": 2,
+                    "type": "loan_term_years",
+                    "value": 10
+                },
+                {
+                    "id": 3,
+                    "type": "loan_rate",
+                    "value": 0.06
+                },
+                {
+                    "id": 4,
+                    "type": "downpayment",
+                    "value": 10000
+                },
+                {
+                    "id": 5,
+                    "type": "appreciation_rate",
+                    "value": 0.05
+                },
+                {
+                    "id": 6,
+                    "type": "time_days",
+                    "value": 365
+                },
+                {
+                    "id": 6,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 901,
+                    "type": "boat_maintenance",
+                    "description": "Annual boat maintenance costs",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "annual_cost",
+                            "value": 5000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 730
+                        }
+                    ]
+                },
+                {
+                    "id": 902,
+                    "type": "sell_boat",
+                    "description": "Sell boat and pay off remaining loan",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "sale_price",
+                            "value": 40000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 1825
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 10,
+            "type": "vacation",
+            "description": "Family vacation to Europe",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "total_cost",
+                    "value": 15000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 90
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 4,
+                    "type": "duration_days",
+                    "value": 14
+                }
+            ],
+            "updating_events": []
+        },
+        {
+            "id": 11,
+            "type": "furnish_home",
+            "description": "Furnish new home with essential items",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "total_cost",
+                    "value": 25000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 30
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": []
+        },
+        {
+            "id": 13,
+            "type": "buy_health_insurance",
+            "description": "Purchase comprehensive health insurance plan",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "monthly_premium",
+                    "value": 500
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 4,
+                    "type": "deductible",
+                    "value": 2000
+                },
+                {
+                    "id": 5,
+                    "type": "coverage_percentage",
+                    "value": 0.8
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 1301,
+                    "type": "change_coverage",
+                    "description": "Upgrade health insurance coverage",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "new_monthly_premium",
+                            "value": 650
+                        },
+                        {
+                            "id": 2,
+                            "type": "new_deductible",
+                            "value": 1000
+                        },
+                        {
+                            "id": 3,
+                            "type": "new_coverage_percentage",
+                            "value": 0.9
+                        },
+                        {
+                            "id": 4,
+                            "type": "time_days",
+                            "value": 365
+                        }
+                    ]
+                },
+                {
+                    "id": 1302,
+                    "type": "medical_expense",
+                    "description": "Major medical procedure with insurance coverage",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "total_cost",
+                            "value": 25000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 180
+                        },
+                        {
+                            "id": 3,
+                            "type": "from_key",
+                            "value": "Cash"
+                        },
+                        {
+                            "id": 4,
+                            "type": "insurance_coverage",
+                            "value": 0.8
+                        },
+                        {
+                            "id": 5,
+                            "type": "deductible",
+                            "value": 2000
+                        }
+                    ]
+                },
+                {
+                    "id": 1303,
+                    "type": "follow_up_care",
+                    "description": "Follow-up medical care and rehabilitation",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "cost",
+                            "value": 5000
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 210
+                        },
+                        {
+                            "id": 3,
+                            "type": "insurance_coverage",
+                            "value": 0.9
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 14,
+            "type": "buy_life_insurance",
+            "description": "Purchase term life insurance policy",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "coverage_amount",
+                    "value": 500000
+                },
+                {
+                    "id": 2,
+                    "type": "monthly_premium",
+                    "value": 100
+                },
+                {
+                    "id": 3,
+                    "type": "term_years",
+                    "value": 20
+                },
+                {
+                    "id": 4,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 5,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 1401,
+                    "type": "increase_coverage",
+                    "description": "Increase life insurance coverage",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "new_coverage_amount",
+                            "value": 750000
+                        },
+                        {
+                            "id": 2,
+                            "type": "new_monthly_premium",
+                            "value": 150
+                        },
+                        {
+                            "id": 3,
+                            "type": "time_days",
+                            "value": 730
+                        }
+                    ]
+                },
+                {
+                    "id": 1402,
+                    "type": "death",
+                    "description": "Death of the insured",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "time_days",
+                            "value": 730
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 17,
+            "type": "manual_correction",
+            "description": "Manual adjustment to account balance",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "amount",
+                    "value": 1000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 365
+                },
+                {
+                    "id": 3,
+                    "type": "envelope",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": []
+        },
+        {
+            "id": 18,
+            "type": "living_expenses",
+            "description": "Recurring monthly living expenses",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "groceries",
+                    "value": 800
+                },
+                {
+                    "id": 2,
+                    "type": "utilities",
+                    "value": 300
+                },
+                {
+                    "id": 3,
+                    "type": "gas",
+                    "value": 200
+                },
+                {
+                    "id": 4,
+                    "type": "eating_out",
+                    "value": 400
+                },
+                {
+                    "id": 5,
+                    "type": "subscriptions",
+                    "value": 100
+                },
+                {
+                    "id": 6,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 7,
+                    "type": "frequency_days",
+                    "value": 30
+                },
+                {
+                    "id": 8,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 1801,
+                    "type": "expense_increase",
+                    "description": "Increase in living expenses due to inflation",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "inflation_rate",
+                            "value": 0.03
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 365
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 19,
+            "type": "rent_payment",
+            "description": "Monthly rent payment",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "amount",
+                    "value": 1500
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 30
+                },
+                {
+                    "id": 4,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": [
+                {
+                    "id": 1901,
+                    "type": "rent_increase",
+                    "description": "Annual rent increase",
+                    "parameters": [
+                        {
+                            "id": 1,
+                            "type": "increase_percentage",
+                            "value": 0.05
+                        },
+                        {
+                            "id": 2,
+                            "type": "time_days",
+                            "value": 365
+                        }
+                    ]
+                }
+            ]
+        },
+        {
+            "id": 20,
+            "type": "single_income",
+            "description": "Single income event",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "amount",
+                    "value": 10000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 3,
+                    "type": "to_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": []
+        },
+        {
+            "id": 21,
+            "type": "single_expense",
+            "description": "Single expense event",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "amount",
+                    "value": 10000
+                },
+                {
+                    "id": 2,
+                    "type": "time_days",
+                    "value": 0
+                },
+                {
+                    "id": 3,
+                    "type": "from_key",
+                    "value": "Cash"
+                }
+            ],
+            "updating_events": []
+        }
+    ],
+    "current_time_days": 4380,
+    "inflation_rate": 0.03,
+    "adjust_for_inflation": true
+}

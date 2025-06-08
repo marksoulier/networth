@@ -98,28 +98,7 @@
       ]
     }
   ],
-  "events": [
-    {
-      "id": 1,
-      "type": "pay_check",
-      "description": "Cash income of $20",
-      "parameters": [
-        {
-          "id": 1,
-          "type": "time",
-          "value": 1,
-          "id_parameter": 1,
-          "id_function": 1
-        },
-        {
-          "id": 2,
-          "type": "money",
-          "value": 20,
-          "id_parameter": 2,
-          "id_function": 1
-        }
-      ]
-    },
+  C
     {
       "id": 2,
       "type": "purchase",

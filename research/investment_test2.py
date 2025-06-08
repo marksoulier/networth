@@ -1,5 +1,7 @@
 import numpy as np
 import matplotlib.pyplot as plt
+from dataclasses import dataclass
+from typing import List, Dict, Tuple, Callable, Any
 
 # Time resolution in days
 t_range = np.arange(0, 365 * 32, 5)  # 10 years, daily steps
@@ -10,26 +12,6 @@ def calculate_monthly_payment(loan_amount, annual_rate, years):
     r_monthly = annual_rate / 12
     N = years * 12
     return loan_amount * (r_monthly * (1 + r_monthly) ** N) / ((1 + r_monthly) ** N - 1)
-
-
-def generate_amortization_schedule(loan_amount, annual_rate, years):
-    """
-    Returns list of (principal_payment, interest_payment) per month
-    """
-    r = annual_rate / 12
-    N = years * 12
-    monthly_payment = calculate_monthly_payment(loan_amount, annual_rate, years)
-    
-    balance = loan_amount
-    schedule = []
-
-    for _ in range(N):
-        interest = balance * r
-        principal = monthly_payment - interest
-        balance -= principal
-        schedule.append((principal, interest))
-
-    return schedule
 
 #Closed form forumla for calculating the principle paid at month_index n from the start of the loan.
 def principal_paid(loan_amount, annual_rate, years, month_index):
@@ -197,34 +179,73 @@ def apply_transfer(envelopes, from_env, to_env, amount, time):
     envelopes[to_env].append(lambda t: T(lambda τ: inflow(amount, τ), t, time))
 
 
-def buy_house(envelopes, from_key, to_key, downpayment, appreciation, home_value, rate, years, time):
-    """Event for buying a house at a given time with given expectations.
+@dataclass
+class TimeVaryingParameter:
+    """A class to handle parameters that change over time using envelope-style function appending.
     
     Parameters:
-        envelopes (dict): Dictionary of envelope lists
-        from_key (str): Key of the envelope to withdraw from
-        to_key (str): Key of the envelope to deposit into
-        downpayment (float): Downpayment amount [USD]
-        appreciation (float): Appreciation rate per year [1/year]
-        home_value (float): Home value [USD]
-        rate (float): Interest rate per year [1/year]
-        years (float): Number of years of the loan
-        time (float): Time of the transfer [days]
+        initial_value (Any): Initial value of the parameter
+        name (str): Name of the parameter for identification
     """
+    initial_value: Any
+    name: str
+    _changes: List[Tuple[float, Any]] = None
+    
+    def __post_init__(self):
+        self._changes = [(0, self.initial_value)]
+    
+    def add_change(self, time: float, value: Any):
+        """Add a new parameter change at a specific time.
+        
+        Args:
+            time (float): Time in days when the change occurs
+            value (Any): New value for the parameter
+        """
+        self._changes.append((time, value))
+    
+    def get_envelope_functions(self, time: float = 0) -> List[Callable]:
+        """Get a list of functions to append to an envelope for this parameter.
+        
+        Args:
+            time (float): Base time for the parameter changes
+            
+        Returns:
+            List[Callable]: List of functions to append to an envelope
+        """
+        functions = []
+        for change_time, value in sorted(self._changes):
+            # Create a function that returns the value after the change time
+            functions.append(lambda t, ct=change_time + time, v=value: v * u(t - ct))
+        return functions
+
+def buy_house(envelopes, from_key, to_key, downpayment, appreciation, home_value, rate, years, time, payment_schedule: TimeVaryingParameter = None):
+    """Event for buying a house at a given time with given expectations."""
     loan_amount = home_value - downpayment
     monthly_payment = calculate_monthly_payment(loan_amount=loan_amount, annual_rate=rate, years=years)
-    interval = 365 / 12 # once a month
+    interval = 365 / 12  # once a month
     final_time = years * 365 + time
-    # take out downpayment from cash envelope
+    
+    # Initialize payment schedule if not provided
+    if payment_schedule is None:
+        payment_schedule = TimeVaryingParameter(monthly_payment, "monthly_payment")
+    
+    # Take out downpayment from cash envelope
     envelopes[from_key].append(lambda t: T(lambda τ: outflow(downpayment, τ), t, time))
-    #place a recurring outflow of money to pay for house
-    envelopes[from_key].append(lambda t: R(lambda τ: outflow(monthly_payment, τ), t, time, final_time, interval))
-    # place a function to calculate home equity on the house equity envelope
-    envelopes[to_key].append(lambda t: T(lambda τ: home_equity(downpayment, appreciation, loan_amount, rate, years, τ), t, time))
     
+    # Add payment functions to the envelope
+    for payment_func in payment_schedule.get_envelope_functions(time):
+        envelopes[from_key].append(lambda t: R(
+            lambda τ: outflow(payment_func(τ), τ),
+            t, time, final_time, interval
+        ))
     
-    
-def buy_car(envelopes, from_key, to_key, downpayment, depreciation, car_value, rate, years, time):
+    # Place a function to calculate home equity on the house equity envelope
+    envelopes[to_key].append(lambda t: T(
+        lambda τ: home_equity(downpayment, appreciation, loan_amount, rate, years, τ),
+        t, time
+    ))
+
+def buy_car(envelopes, from_key, to_key, downpayment, depreciation, car_value, rate, years, time, payment_schedule: TimeVaryingParameter = None, depreciation_schedule: TimeVaryingParameter = None):
     """Event for buying a car at a given time with given expectations.
     
     Parameters:
@@ -232,11 +253,13 @@ def buy_car(envelopes, from_key, to_key, downpayment, depreciation, car_value, r
         from_key (str): Key of the envelope to withdraw from
         to_key (str): Key of the envelope to deposit into
         downpayment (float): Downpayment amount [USD]
-        depreciation (float): Depreciation rate per year [1/year] (negative value)
+        depreciation (float): Initial depreciation rate per year [1/year] (negative value)
         car_value (float): Car value [USD]
         rate (float): Interest rate per year [1/year]
         years (float): Number of years of the loan
         time (float): Time of the transfer [days]
+        payment_schedule (TimeVaryingParameter): Schedule of payment changes over time
+        depreciation_schedule (TimeVaryingParameter): Schedule of depreciation rate changes over time
     """
     loan_amount = car_value - downpayment
     monthly_payment = calculate_monthly_payment(loan_amount=loan_amount, annual_rate=rate, years=years)
@@ -244,14 +267,38 @@ def buy_car(envelopes, from_key, to_key, downpayment, depreciation, car_value, r
     final_time = years * 365 + time
     initial_drop = 0.10  # 10% immediate depreciation when driving off the lot
     
+    # Initialize payment schedule if not provided
+    if payment_schedule is None:
+        payment_schedule = TimeVaryingParameter(monthly_payment, "monthly_payment")
+    
+    # Initialize depreciation schedule if not provided
+    if depreciation_schedule is None:
+        depreciation_schedule = TimeVaryingParameter(depreciation, "depreciation_rate")
+    
     # Take out downpayment from cash envelope
     envelopes[from_key].append(lambda t: T(lambda τ: outflow(downpayment, τ), t, time))
     
-    # Place a recurring outflow of money to pay for car
-    envelopes[from_key].append(lambda t: R(lambda τ: outflow(monthly_payment, τ), t, time, final_time, interval))
+    # Add payment functions to the envelope
+    for payment_func in payment_schedule.get_envelope_functions(time):
+        envelopes[from_key].append(lambda t: R(
+            lambda τ: outflow(payment_func(τ), τ),
+            t, time, final_time, interval
+        ))
     
-    # Place a function to calculate car equity on the car equity envelope
-    envelopes[to_key].append(lambda t: T(lambda τ: car_equity(downpayment, depreciation, loan_amount, rate, years, initial_drop, τ), t, time))
+    # Place a function to calculate car equity on the car equity envelope with variable depreciation
+    for depreciation_func in depreciation_schedule.get_envelope_functions(time):
+        envelopes[to_key].append(lambda t: T(
+            lambda τ: car_equity(
+                downpayment,
+                depreciation_func(τ),
+                loan_amount,
+                rate,
+                years,
+                initial_drop,
+                τ
+            ),
+            t, time
+        ))
 
 
 def get_a_job(envelopes, from_key, salary, pay_period, time, time_end):
@@ -316,10 +363,13 @@ envelopes = {
 buy_house_date = 3 * 365
 
 #Inflow of money to pay of rhouse 
-envelopes['W1'].append(lambda t: inflow(50000, t)) #start with 50k in cash
+envelopes['W1'].append(lambda t: inflow(500000, t)) #start with 50k in cash
 
 # Buying a home for 400000 with 20% downpayment, 3.5% interest rate, 30 year mortgage
-buy_house(envelopes=envelopes, from_key='W1', to_key='House', downpayment=80000, appreciation=0.0427, home_value=400000, rate=0.035, years=30, time=buy_house_date)
+mortgage_payment_schedule = TimeVaryingParameter(1800, "monthly_payment")
+mortgage_payment_schedule.add_change(5*365, 2200)  # Change after 3 years
+#mortgage_payment_schedule.add_change(8*365, 2500)  # Change after 8 years
+buy_house(envelopes=envelopes, from_key='W1', to_key='House', downpayment=80000, appreciation=0.0427, home_value=400000, rate=0.035, years=30, time=buy_house_date, payment_schedule=mortgage_payment_schedule)
 
 #rent a house for 1500 a month instead of buying
 # rent_a_house(envelopes=envelopes, from_key='W1', rent=1500, time=buy_house_date, time_end=20*365)
@@ -327,17 +377,24 @@ buy_house(envelopes=envelopes, from_key='W1', to_key='House', downpayment=80000,
 # Example usage:
 buy_car_date = 1*365  # 100 days after start
 # Buying a car for 30000 with 20% downpayment, 5% interest rate, 5 year loan, -15% annual depreciation
-buy_car(envelopes=envelopes, from_key='W1', to_key='Car', downpayment=6000, depreciation=-0.15, 
-        car_value=30000, rate=0.05, years=5, time=buy_car_date)
+car_payment_schedule = TimeVaryingParameter(500, "monthly_payment")
+car_payment_schedule.add_change(1*365, 600)  # Increase after 1 year
+
+#car_depreciation_schedule = TimeVaryingParameter(-0.15, "depreciation_rate")
+
+#buy_car(envelopes=envelopes, from_key='W1', to_key='Car', downpayment=6000, depreciation=-0.15, 
+#        car_value=30000, rate=0.05, years=5, time=buy_car_date,
+#        payment_schedule=car_payment_schedule,
+#        depreciation_schedule=car_depreciation_schedule)
 
 # Pay about 3000 a month for home goods
-envelopes['W1'].append(lambda t: R(lambda τ: outflow(3000, τ), t, 0, t_range[-1], 365 / 12))
+#envelopes['W1'].append(lambda t: R(lambda τ: outflow(3000, τ), t, 0, t_range[-1], 365 / 12))
 
 #Get a job a day 3
-get_a_job(envelopes=envelopes, from_key='W1', salary=100000, pay_period=365 / 24, time=3, time_end=20*365)
+#get_a_job(envelopes=envelopes, from_key='W1', salary=100000, pay_period=365 / 24, time=3, time_end=20*365)
 
 # Save 1000 a month in a savings account with 3% interest
-savings_account_with_interest(envelopes=envelopes, from_key='W1', to_key='W2', amount=2000, interest=0.03, time=3, time_end=20*365)
+#savings_account_with_interest(envelopes=envelopes, from_key='W1', to_key='W2', amount=2000, interest=0.03, time=3, time_end=20*365)
 
 
 
