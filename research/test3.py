@@ -6,7 +6,7 @@ from events_library.morgage_functions import (
     buy_house, sell_house, create_home_value_function,
     sell_house_and_transfer, new_appraisal, sell_home, change_payment
 )
-from events_library.base_functions import add_correction, u, inflation_adjust, evaluate_results
+from research.base_functions import add_correction, u, inflation_adjust, evaluate_results
 from events_library.show_visual import show_visual
 
 # Example usage
