@@ -6,7 +6,7 @@ from datetime import date, datetime, timedelta
 from typing import Any, Dict, List, Optional, Tuple
 
 # Absolute path to the default plan JSON
-DEFAULT_PLAN_PATH = "/home/yocto/playground/prova-prova-hackathon-1027/research/Mikes_Retirement_Plan.json"
+DEFAULT_PLAN_PATH = "/home/yocto/playground/prova-prova-hackathon-1027/research/Marks_40_Plan.json"
 DEFAULT_SCHEMA_PATH = "/home/yocto/playground/prova-prova-hackathon-1027/research/event_schema.json"
 
 

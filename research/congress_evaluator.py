@@ -129,7 +129,7 @@ def main() -> int:
     laws = list_119th_congress_laws()
     print(f"Evaluating {len(laws)} laws from the 119th Congress\n")
 
-    for i, itm in enumerate(laws[:2], 1):
+    for i, itm in enumerate(laws, 1):
         title = get_item_title(itm) or f"{itm.get('type', '')}-{itm.get('number', '')}"
         bill_type = (itm.get("type") or "").lower()
         bill_num = itm.get("number") or ""

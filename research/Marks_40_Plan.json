@@ -1,0 +1,469 @@
+{
+  "title": "Marks 4.0 Plan",
+  "birth_date": "2001-09-11",
+  "inflation_rate": 0.024,
+  "adjust_for_inflation": false,
+  "retirement_goal": 0,
+  "view_start_date": "2024-03-02",
+  "view_end_date": "2029-03-03",
+  "envelopes": [
+    {
+      "name": "Other (Cash)",
+      "category": "Cash",
+      "growth": "None",
+      "rate": 0,
+      "account_type": "regular"
+    },
+    {
+      "name": "Other (Investments)",
+      "category": "Investments",
+      "growth": "Yearly Compound",
+      "rate": 0.07,
+      "account_type": "regular"
+    },
+    {
+      "name": "Other (Savings)",
+      "category": "Savings",
+      "growth": "Daily Compound",
+      "rate": 0.0001,
+      "account_type": "regular"
+    },
+    {
+      "name": "Other (Retirement)",
+      "category": "Retirement",
+      "growth": "Yearly Compound",
+      "rate": 0.06,
+      "account_type": "system-controlled"
+    },
+    {
+      "name": "Other (Debt)",
+      "category": "Debt",
+      "growth": "None",
+      "rate": 0,
+      "account_type": "regular"
+    },
+    {
+      "name": "Etrade",
+      "category": "Investments",
+      "growth": "Yearly Compound",
+      "rate": 0.07,
+      "account_type": "regular"
+    },
+    {
+      "name": "DoD Debt",
+      "category": "Debt",
+      "growth": "None",
+      "rate": 0,
+      "account_type": "regular"
+    },
+    {
+      "name": "Car",
+      "category": "Assets",
+      "growth": "Depreciation",
+      "rate": 0.05,
+      "account_type": "regular"
+    }
+  ],
+  "events": [
+    {
+      "id": 1,
+      "type": "declare_accounts",
+      "title": "Initial Account Balances",
+      "description": "Declare the initial balances of up to five financial accounts (envelopes) at a specific time.",
+      "is_recurring": false,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-04"
+        },
+        {
+          "id": 1,
+          "type": "amount1",
+          "value": 536.51
+        },
+        {
+          "id": 2,
+          "type": "envelope1",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 3,
+          "type": "amount2",
+          "value": 3934.08
+        },
+        {
+          "id": 4,
+          "type": "envelope2",
+          "value": "Other (Savings)"
+        },
+        {
+          "id": 5,
+          "type": "amount3",
+          "value": 49029.1
+        },
+        {
+          "id": 6,
+          "type": "envelope3",
+          "value": "Other (Investments)"
+        },
+        {
+          "id": 7,
+          "type": "amount4",
+          "value": 0
+        },
+        {
+          "id": 8,
+          "type": "envelope4",
+          "value": "Other (Retirement)"
+        },
+        {
+          "id": 9,
+          "type": "amount5",
+          "value": 49974.54
+        },
+        {
+          "id": 10,
+          "type": "envelope5",
+          "value": "Etrade"
+        }
+      ],
+      "updating_events": []
+    },
+    {
+      "id": 2,
+      "type": "manual_correction",
+      "title": "DOD debt update",
+      "description": "Manually adjust the value of an envelope for tracking accuracy.",
+      "is_recurring": false,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-04"
+        },
+        {
+          "id": 1,
+          "type": "amount",
+          "value": -107773
+        },
+        {
+          "id": 2,
+          "type": "to_key",
+          "value": "DoD Debt"
+        }
+      ],
+      "updating_events": []
+    },
+    {
+      "id": 3,
+      "type": "manual_correction",
+      "title": "Tacoma Truck",
+      "description": "Manually adjust the value of an envelope for tracking accuracy.",
+      "is_recurring": false,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-04"
+        },
+        {
+          "id": 1,
+          "type": "amount",
+          "value": 7000
+        },
+        {
+          "id": 2,
+          "type": "to_key",
+          "value": "Car"
+        }
+      ],
+      "updating_events": []
+    },
+    {
+      "id": 4,
+      "type": "inflow",
+      "title": "DOD Money",
+      "description": "A simple inflow of money into an envelope.",
+      "is_recurring": true,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-14"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2028-05-05"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 3,
+          "type": "amount",
+          "value": 2500
+        },
+        {
+          "id": 4,
+          "type": "to_key",
+          "value": "Other (Savings)"
+        },
+        {
+          "id": 5,
+          "type": "final_recurring_inflow",
+          "value": "2028-05-30"
+        },
+        {
+          "id": 6,
+          "type": "number_of_recurring_inflows",
+          "value": 34
+        },
+        {
+          "id": 7,
+          "type": "total_inflow",
+          "value": 85000
+        }
+      ],
+      "updating_events": [
+        {
+          "id": 10,
+          "type": "update_amount",
+          "title": "",
+          "description": "Update the amount of the recurring income.",
+          "is_recurring": false,
+          "parameters": [
+            {
+              "id": 0,
+              "type": "start_time",
+              "value": "2026-12-05"
+            },
+            {
+              "id": 1,
+              "type": "end_time",
+              "value": "2035-08-12"
+            },
+            {
+              "id": 2,
+              "type": "frequency_days",
+              "value": 365
+            },
+            {
+              "id": 3,
+              "type": "amount",
+              "value": 3300
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "id": 5,
+      "type": "outflow",
+      "title": "DOD debt",
+      "description": "I consider debt to the DOD as I have to pay back time or the money to them becuase of the scholarship",
+      "is_recurring": true,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-14"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2026-08-01"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 3,
+          "type": "amount",
+          "value": 2500
+        },
+        {
+          "id": 4,
+          "type": "from_key",
+          "value": "DoD Debt"
+        },
+        {
+          "id": 5,
+          "type": "final_recurring_outflow",
+          "value": "2026-08-09"
+        },
+        {
+          "id": 6,
+          "type": "number_of_recurring_outflows",
+          "value": 12
+        },
+        {
+          "id": 7,
+          "type": "total_outflow",
+          "value": 30000
+        }
+      ],
+      "updating_events": []
+    },
+    {
+      "id": 8,
+      "type": "monthly_budgeting",
+      "title": "",
+      "description": "Set your typical monthly budget for common expense categories.",
+      "is_recurring": true,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-04"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2105-07-16"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 3,
+          "type": "from_key",
+          "value": "Other (Savings)"
+        },
+        {
+          "id": 4,
+          "type": "groceries",
+          "value": 200
+        },
+        {
+          "id": 5,
+          "type": "utilities",
+          "value": 0
+        },
+        {
+          "id": 6,
+          "type": "rent",
+          "value": 750
+        },
+        {
+          "id": 7,
+          "type": "transportation",
+          "value": 100
+        },
+        {
+          "id": 8,
+          "type": "insurance",
+          "value": 250
+        },
+        {
+          "id": 9,
+          "type": "healthcare",
+          "value": 100
+        },
+        {
+          "id": 10,
+          "type": "dining_out",
+          "value": 200
+        },
+        {
+          "id": 11,
+          "type": "entertainment",
+          "value": 0
+        },
+        {
+          "id": 12,
+          "type": "personal_care",
+          "value": 75
+        },
+        {
+          "id": 13,
+          "type": "miscellaneous",
+          "value": 100
+        }
+      ],
+      "updating_events": []
+    },
+    {
+      "id": 9,
+      "type": "get_wage_job",
+      "title": "USU Student Employment",
+      "description": "Earning $20 an hour leading a student team researching AI.",
+      "is_recurring": true,
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-25"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2026-04-05"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 14
+        },
+        {
+          "id": 3,
+          "type": "hourly_wage",
+          "value": 20
+        },
+        {
+          "id": 4,
+          "type": "hours_per_week",
+          "value": 20
+        },
+        {
+          "id": 5,
+          "type": "pay_period",
+          "value": 26
+        },
+        {
+          "id": 6,
+          "type": "federal_income_tax",
+          "value": 0.12
+        },
+        {
+          "id": 7,
+          "type": "social_security_tax",
+          "value": 0.062
+        },
+        {
+          "id": 8,
+          "type": "medicare_tax",
+          "value": 0.014499999999999999
+        },
+        {
+          "id": 9,
+          "type": "p_401k_contribution",
+          "value": 0
+        },
+        {
+          "id": 10,
+          "type": "employer_match",
+          "value": 0
+        },
+        {
+          "id": 11,
+          "type": "to_key",
+          "value": "Other (Savings)"
+        },
+        {
+          "id": 12,
+          "type": "p_401k_key",
+          "value": "Other (Retirement)"
+        }
+      ],
+      "updating_events": []
+    }
+  ]
+}
