@@ -371,7 +371,7 @@ def get_job(event: dict, envelopes: dict):
         "r_Fed": params["federal_income_tax"],
         "r_SS": params["social_security_tax"],
         "r_Med": params["medicare_tax"],
-        "r_401k": params["401k_contribution"],
+        "r_401k": params["p_401k_contribution"],
         "r_state": params["state_income_tax"],
         "time_start": params["start_time"],
         "time_end": params["end_time"],
@@ -390,7 +390,7 @@ def get_job(event: dict, envelopes: dict):
             theta = raise_override(theta, upd_params["salary"], upd_params["start_time"])
 
         elif upd_type == "change_401k_contribution":
-            theta = update_401k(theta, upd_params["401k_contribution"], upd_params["start_time"])
+            theta = update_401k(theta, upd_params["p_401k_contribution"], upd_params["start_time"])
 
         elif upd_type == "get_a_bonus":
             envelopes["Cash"].append(
@@ -1103,6 +1103,3 @@ def manual_correction(event: dict, envelopes: dict):
             params["start_time"]
         )
         envelopes[to_key].append(compound_func)
-
-
-
