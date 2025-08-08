@@ -1,0 +1,242 @@
+{
+    "birth_date": "2001-09-11",
+    "inflation_rate": 0.03,
+    "adjust_for_inflation": true,
+    "envelopes": [
+        {
+            "name": "Cash",
+            "category": "Cash",
+            "growth": "Monthly Compound",
+            "rate": 0.0001
+        },
+        {
+            "name": "Ameritrade",
+            "category": "Investment",
+            "growth": "Yearly Compound",
+            "rate": 0.1
+        },
+        {
+            "name": "Etrade",
+            "category": "Investment",
+            "growth": "Yearly Compound",
+            "rate": 0.1
+        },
+        {
+            "name": "DoD Debt",
+            "category": "Debt",
+            "growth": "None",
+            "rate": 0.0
+        }
+    ],
+    "events": [
+        {
+            "id": 1,
+            "type": "reoccuring_income",
+            "description": "The Income recieved from the DOD every month",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8030
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 2500
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 30
+                },
+                {
+                    "id": 4,
+                    "type": "to_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "end_days",
+                    "value": 9855
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "type": "reoccuring_income",
+            "description": "The Income recieved from the DOD for summer stipends",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8200
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 15000
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 365
+                },
+                {
+                    "id": 4,
+                    "type": "to_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "end_days",
+                    "value": 9500
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "type": "reoccuring_income",
+            "description": "The Income recieved from the DOD every year at beginning of school",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8030
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 2000
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 365
+                },
+                {
+                    "id": 4,
+                    "type": "to_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "end_days",
+                    "value": 9855
+                }
+            ]
+        },
+        {
+            "id": 4,
+            "type": "reoccuring_spending",
+            "description": "Taxes payed every year on DOD income",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8180
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 7000
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 365
+                },
+                {
+                    "id": 4,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "end_days",
+                    "value": 9855
+                }
+            ]
+        },
+        {
+            "id": 5,
+            "type": "reoccuring_transfer",
+            "description": "Transfering income from Cash to Investments",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8090
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 5000
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 90
+                },
+                {
+                    "id": 4,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "to_key",
+                    "value": "Ameritrade"
+                },
+                {
+                    "id": 6,
+                    "type": "end_days",
+                    "value": 9855
+                }
+            ]
+        },
+        {
+            "id": 6,
+            "type": "manual_correction",
+            "description": "Manual correction to Cash envelope",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8595
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 4000
+                },
+                {
+                    "id": 3,
+                    "type": "to_key",
+                    "value": "Cash"
+                }
+            ]
+        },
+        {
+            "id": 7,
+            "type": "manual_correction",
+            "description": "Manual correction to Investment envelope",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8595
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 96000
+                },
+                {
+                    "id": 3,
+                    "type": "to_key",
+                    "value": "Ameritrade"
+                }
+            ]
+        }
+    ]
+}

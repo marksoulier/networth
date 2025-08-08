@@ -1,0 +1,609 @@
+{
+  "title": "Mikes Retirement Plan",
+  "events": [
+    {
+      "id": 1,
+      "type": "monthly_budgeting",
+      "title": "",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2023-12-27"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2105-07-03"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 3,
+          "type": "from_key",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 4,
+          "type": "groceries",
+          "value": 250
+        },
+        {
+          "id": 5,
+          "type": "utilities",
+          "value": 50
+        },
+        {
+          "id": 6,
+          "type": "rent",
+          "value": 1500
+        },
+        {
+          "id": 7,
+          "type": "transportation",
+          "value": 200
+        },
+        {
+          "id": 8,
+          "type": "insurance",
+          "value": 0
+        },
+        {
+          "id": 9,
+          "type": "healthcare",
+          "value": 0
+        },
+        {
+          "id": 10,
+          "type": "dining_out",
+          "value": 0
+        },
+        {
+          "id": 11,
+          "type": "entertainment",
+          "value": 20
+        },
+        {
+          "id": 12,
+          "type": "personal_care",
+          "value": 0
+        },
+        {
+          "id": 13,
+          "type": "miscellaneous",
+          "value": 300
+        }
+      ],
+      "description": "Set your typical monthly budget for common expense categories.",
+      "is_recurring": true,
+      "updating_events": []
+    },
+    {
+      "id": 2,
+      "type": "declare_accounts",
+      "title": "Initial Account Balances",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2025-08-01"
+        },
+        {
+          "id": 1,
+          "type": "amount1",
+          "value": 123000
+        },
+        {
+          "id": 2,
+          "type": "envelope1",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 3,
+          "type": "amount2",
+          "value": 23
+        },
+        {
+          "id": 4,
+          "type": "envelope2",
+          "value": "Other (Savings)"
+        },
+        {
+          "id": 5,
+          "type": "amount3",
+          "value": 4000
+        },
+        {
+          "id": 6,
+          "type": "envelope3",
+          "value": "Other (Investments)"
+        },
+        {
+          "id": 7,
+          "type": "amount4",
+          "value": 1234
+        },
+        {
+          "id": 8,
+          "type": "envelope4",
+          "value": "Other (Retirement)"
+        },
+        {
+          "id": 9,
+          "type": "amount5",
+          "value": -213
+        },
+        {
+          "id": 10,
+          "type": "envelope5",
+          "value": "Other (Debt)"
+        }
+      ],
+      "description": "Declare the initial balances of up to five financial accounts (envelopes) at a specific time.",
+      "is_recurring": false,
+      "updating_events": []
+    },
+    {
+      "id": 3,
+      "type": "get_job",
+      "title": "First Job",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2021-12-27"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2067-12-16"
+        },
+        {
+          "id": 2,
+          "type": "salary",
+          "value": 80000
+        },
+        {
+          "id": 3,
+          "type": "pay_period",
+          "value": 26
+        },
+        {
+          "id": 4,
+          "type": "federal_income_tax",
+          "value": 0.12
+        },
+        {
+          "id": 5,
+          "type": "state_income_tax",
+          "value": 0.05
+        },
+        {
+          "id": 6,
+          "type": "social_security_tax",
+          "value": 0.062
+        },
+        {
+          "id": 7,
+          "type": "medicare_tax",
+          "value": 0.0145
+        },
+        {
+          "id": 8,
+          "type": "p_401k_contribution",
+          "value": 0.05
+        },
+        {
+          "id": 9,
+          "type": "p_401k_match",
+          "value": 0.05
+        },
+        {
+          "id": 10,
+          "type": "to_key",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 11,
+          "type": "p_401k_key",
+          "value": "Other (Retirement)"
+        },
+        {
+          "id": 12,
+          "type": "taxable_income_key",
+          "value": "Taxable Income"
+        },
+        {
+          "id": 13,
+          "type": "federal_withholdings_key",
+          "value": "Federal Withholdings"
+        },
+        {
+          "id": 14,
+          "type": "state_withholdings_key",
+          "value": "State Withholdings"
+        },
+        {
+          "id": 15,
+          "type": "local_withholdings_key",
+          "value": "Local Withholdings"
+        }
+      ],
+      "description": "Start earning a salary from employment.",
+      "is_recurring": true,
+      "updating_events": [
+        {
+          "id": 6,
+          "type": "get_a_raise",
+          "title": "Salary Raise",
+          "parameters": [
+            {
+              "id": 0,
+              "type": "start_time",
+              "value": "2033-12-24"
+            },
+            {
+              "id": 1,
+              "type": "end_time",
+              "value": "2035-07-30"
+            },
+            {
+              "id": 2,
+              "type": "frequency_days",
+              "value": 365
+            },
+            {
+              "id": 3,
+              "type": "salary",
+              "value": 100000
+            }
+          ],
+          "description": "Receive an increase in salary.",
+          "is_recurring": false
+        }
+      ]
+    },
+    {
+      "id": 4,
+      "type": "buy_house",
+      "title": "Bought our home",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2041-12-22"
+        },
+        {
+          "id": 1,
+          "type": "home_value",
+          "value": 400000
+        },
+        {
+          "id": 2,
+          "type": "loan_term_years",
+          "value": 15
+        },
+        {
+          "id": 3,
+          "type": "loan_rate",
+          "value": 0.03
+        },
+        {
+          "id": 4,
+          "type": "downpayment",
+          "value": 60000
+        },
+        {
+          "id": 5,
+          "type": "from_key",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 6,
+          "type": "to_key",
+          "value": "House"
+        },
+        {
+          "id": 7,
+          "type": "mortgage_envelope",
+          "value": "Home Mortgage"
+        },
+        {
+          "id": 8,
+          "type": "property_tax_rate",
+          "value": 0.015
+        },
+        {
+          "id": 9,
+          "type": "end_time",
+          "value": "2056-12-21"
+        }
+      ],
+      "description": "Purchase a home with mortgage terms.",
+      "is_recurring": false,
+      "updating_events": []
+    },
+    {
+      "id": 5,
+      "type": "retirement",
+      "title": "",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2065-12-16"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2125-07-03"
+        },
+        {
+          "id": 2,
+          "type": "amount",
+          "value": 10000
+        },
+        {
+          "id": 3,
+          "type": "amount_roth_ira",
+          "value": 0
+        },
+        {
+          "id": 4,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 5,
+          "type": "p_401k_key",
+          "value": "Other (Retirement)"
+        },
+        {
+          "id": 6,
+          "type": "roth_ira_key",
+          "value": "RothIRA"
+        },
+        {
+          "id": 7,
+          "type": "to_key",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 8,
+          "type": "p_401k_withdraw_withholding_key",
+          "value": "401K Withdraw Withholding"
+        },
+        {
+          "id": 9,
+          "type": "p_401k_withdraw_key",
+          "value": "401K Withdraw"
+        },
+        {
+          "id": 10,
+          "type": "roth_ira_withdraw_key",
+          "value": "ROTH IRA Withdraw"
+        },
+        {
+          "id": 11,
+          "type": "roth_ira_principle_key",
+          "value": "ROTH IRA Principle"
+        }
+      ],
+      "description": "Transition from employment to retirement with recurring transfers from 401K and ROTH IRA to cash, including taxable income tracking.",
+      "is_recurring": true,
+      "updating_events": []
+    },
+    {
+      "id": 7,
+      "type": "purchase",
+      "title": "Purchase",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2027-12-26"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2035-07-30"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 3,
+          "type": "money",
+          "value": 20
+        },
+        {
+          "id": 4,
+          "type": "from_key",
+          "value": "Other (Cash)"
+        }
+      ],
+      "description": "Basic purchase or spending of money",
+      "is_recurring": false,
+      "updating_events": []
+    },
+    {
+      "id": 8,
+      "type": "transfer_money",
+      "title": "Money Transfer",
+      "parameters": [
+        {
+          "id": 0,
+          "type": "start_time",
+          "value": "2027-06-26"
+        },
+        {
+          "id": 1,
+          "type": "end_time",
+          "value": "2035-07-30"
+        },
+        {
+          "id": 2,
+          "type": "frequency_days",
+          "value": 30
+        },
+        {
+          "id": 3,
+          "type": "amount",
+          "value": 20
+        },
+        {
+          "id": 4,
+          "type": "from_key",
+          "value": "Other (Cash)"
+        },
+        {
+          "id": 5,
+          "type": "to_key",
+          "value": "Other (Investments)"
+        }
+      ],
+      "description": "Transfer money between envelopes with optional growth rate for destination.",
+      "is_recurring": false,
+      "updating_events": []
+    }
+  ],
+  "envelopes": [
+    {
+      "name": "Other (Cash)",
+      "rate": 0,
+      "growth": "None",
+      "category": "Cash",
+      "account_type": "regular"
+    },
+    {
+      "name": "Personal Loan",
+      "rate": 0.04,
+      "growth": "Simple Interest",
+      "category": "Debt",
+      "account_type": "regular"
+    },
+    {
+      "name": "CD",
+      "rate": 0.04,
+      "growth": "Yearly Compound",
+      "category": "Investments",
+      "account_type": "regular"
+    },
+    {
+      "name": "Other (Savings)",
+      "rate": 0.001,
+      "growth": "Daily Compound",
+      "category": "Savings",
+      "account_type": "regular"
+    },
+    {
+      "name": "Other (Investments)",
+      "rate": 0.07,
+      "growth": "Yearly Compound",
+      "category": "Investments",
+      "account_type": "regular"
+    },
+    {
+      "name": "Other (Retirement)",
+      "rate": 0.06,
+      "growth": "Yearly Compound",
+      "category": "Retirement",
+      "account_type": "system-controlled"
+    },
+    {
+      "name": "Other (Debt)",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "regular"
+    },
+    {
+      "name": "Taxable Income",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "Federal Withholdings",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "State Withholdings",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "Local Withholdings",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "House",
+      "rate": 0.03,
+      "growth": "Appreciation",
+      "category": "Assets",
+      "account_type": "regular"
+    },
+    {
+      "name": "Home Mortgage",
+      "rate": 0.05,
+      "growth": "Monthly Compound",
+      "category": "Debt",
+      "account_type": "regular"
+    },
+    {
+      "name": "RothIRA",
+      "rate": 0.07,
+      "growth": "Yearly Compound",
+      "category": "Retirement",
+      "account_type": "system-controlled"
+    },
+    {
+      "name": "401K Withdraw Withholding",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "401K Withdraw",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "ROTH IRA Withdraw",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    },
+    {
+      "name": "ROTH IRA Principle",
+      "rate": 0,
+      "growth": "None",
+      "category": "Debt",
+      "account_type": "non-networth-account"
+    }
+  ],
+  "birth_date": "2001-01-01",
+  "view_end_date": "2077-03-22",
+  "inflation_rate": 0.024,
+  "retirement_goal": 2000000,
+  "view_start_date": "2001-01-01",
+  "adjust_for_inflation": false
+}

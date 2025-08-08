@@ -1,0 +1,134 @@
+{
+    "birth_date": "2001-09-11",
+    "inflation_rate": 0.03,
+    "adjust_for_inflation": true,
+    "envelopes": [
+        {
+            "name": "Cash",
+            "category": "Cash",
+            "growth": "Daily Compound",
+            "rate": 0.001
+        },
+        {
+            "name": "Ameritrade",
+            "category": "Investment",
+            "growth": "Daily Compound",
+            "rate": 0.1
+        },
+        {
+            "name": "Etrade",
+            "category": "Investment",
+            "growth": "Daily Compound",
+            "rate": 0.1
+        },
+        {
+            "name": "DoD Debt",
+            "category": "Debt",
+            "growth": "None",
+            "rate": 0.0
+        }
+    ],
+    "events": [
+        {
+            "id": 1,
+            "type": "reoccuring_income",
+            "description": "Default recurring income",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 8030
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 2500
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 30
+                },
+                {
+                    "id": 4,
+                    "type": "to_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "end_days",
+                    "value": 9855
+                }
+            ]
+        },
+        {
+            "id": 2,
+            "type": "reoccuring_spending",
+            "description": "Default recurring spending",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 0
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 500
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 30
+                },
+                {
+                    "id": 4,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "end_days",
+                    "value": 3650
+                }
+            ]
+        },
+        {
+            "id": 3,
+            "type": "reoccuring_transfer",
+            "description": "Default recurring transfer",
+            "parameters": [
+                {
+                    "id": 1,
+                    "type": "start_time",
+                    "value": 0
+                },
+                {
+                    "id": 2,
+                    "type": "amount",
+                    "value": 200
+                },
+                {
+                    "id": 3,
+                    "type": "frequency_days",
+                    "value": 30
+                },
+                {
+                    "id": 4,
+                    "type": "from_key",
+                    "value": "Cash"
+                },
+                {
+                    "id": 5,
+                    "type": "to_key",
+                    "value": "Ameritrade"
+                },
+                {
+                    "id": 6,
+                    "type": "end_days",
+                    "value": 3650
+                }
+            ]
+        }
+    ]
+}

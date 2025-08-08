@@ -58,15 +58,20 @@ def f_out(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[f
     params = theta(t_i)  # Evaluate parameters at time of occurrence
     return lambda t: -params["b"] * u(t)
 
-# θ = {"P": principal, "r": daily_rate}
+# θ = {"P": principal, "r": daily_rate, "k": rate}
 def f_com(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
     params = theta(t_i)  # Evaluate parameters at time of occurrence
-    return lambda t: params["P"] * (1 + params["r"] / 365) ** t * u(t)
+    return lambda t: params["P"] * (1 + params["r"] / params["k"]) ** (t*params["k"]/365) * u(t)
 
 # θ_sal = {"S": salary, "p": periods, "r_SS": ss_tax, "r_Med": med_tax, "r_Fed": fed_tax, "r_401k": match}
 def f_sal(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
     params = theta(t_i)  # Evaluate parameters at time of occurrence
     return lambda t: (params["S"] / params["p"]) * (1 - (params["r_SS"] + params["r_Med"] + params["r_Fed"] + params["r_401k"])) * u(t)
+
+# θ_wage = {"w": hourly_wage, "h": hours_per_week, "p": periods_per_year, "r_SS": ss_tax, "r_Fed": federal_tax, "r_Med": medicare, "r_401k": retirement_contrib}
+def f_wage(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
+    params = theta(t_i)  # Evaluate parameters at time of occurrence
+    return lambda t: ((params["w"] * params["h"] * 52) / params["p"]) * (1 - (params["r_SS"] + params["r_Fed"] + params["r_Med"] + params["r_401k"])) * u(t)
 
 # θ_app = {"V0": initial_value, "r_app": annual_appreciation}
 def f_app(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
@@ -148,11 +153,6 @@ def f_maint(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[
     params = theta(t_i)  # Evaluate parameters at time of occurrence
     return lambda t: params["m0"] + params["alpha"] * (t - params["t0"])
 
-# θ_inf = {"r_inf": inflation_rate, "t_today": reference_day}
-def f_inflation_adjust(W: Callable[[float], float], theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
-    params = theta(t_i)  # Evaluate parameters at time of occurrence
-    return lambda t: W(t) / ((1 + params["r_inf"]) ** ((t - params["t_today"]) / 365)) if t >= params["t_today"] else W(t)
-
 # θ_empirical = {"V_obs": observed_value, "t_k": observation_time}
 def f_empirical(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
     params = theta(t_i)  # Evaluate parameters at time of occurrence
@@ -173,6 +173,10 @@ def f_get_job(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callabl
     params = theta(t_i)  # Evaluate parameters at time of occurrence
     return lambda t: R(params['time_start'], 365 / params["p"], params['time_end'], f_sal, theta)(t)
 
+# θ_wage = {"w": hourly_wage, "h": hours_per_week, "p": periods_per_year, "r_Fed": federal_tax, "r_SS": ss_tax, "r_Med": medicare, "r_401k": retirement_contrib, "r_match": employer_match, "time_start": When you start the job, "time_end": When you end the job}
+def f_get_wage_job(theta: Callable[[float], Dict[str, float]], t_i: float) -> Callable[[float], float]:
+    params = theta(t_i)  # Evaluate parameters at time of occurrence
+    return lambda t: R(params['time_start'], 365 / params["p"], params['time_end'], f_wage, theta)(t)
 
 # Return function theta(t) for raise
 def raise_override(theta: Callable[[float], Dict[str, float]], new_salary: float, t_raise: float) -> Callable[[float], Dict[str, float]]:
@@ -337,6 +341,39 @@ example6_envelopes = {
     ]
 }
 
+
+# Example 8: Transfer $10,000 from cash to investment with 6% growth
+example8_envelopes = {
+    "cash": [
+        T(
+            365,  # End of year 1
+            f_com,  # Using f_com to account for source growth
+            P({
+                "P": 10000,
+                "r": 0.00  # 0% growth in cash account before transfer
+            })
+        )
+    ],
+    "investment": [
+        T(
+            365,  # End of year 1
+            f_in,
+            P({"a": 10000})
+        ),
+        f_com(
+            P({
+                "P": 10000,
+                "r": 0.06  # 6% growth in investment account after transfer
+            }),
+            365
+        )
+    ]
+}
+
+
+
+
+
 from base_functions import evaluate_results
 
 
@@ -384,7 +421,6 @@ def get_job(event: dict, envelopes: dict):
     for upd in event.get("updating_events", []):
         upd_type = upd["type"]
         upd_params = upd.get("parameters", {})
-        print(upd_params)
         
         if upd_type == "get_a_raise":
             theta = raise_override(theta, upd_params["salary"], upd_params["start_time"])
@@ -393,25 +429,93 @@ def get_job(event: dict, envelopes: dict):
             theta = update_401k(theta, upd_params["p_401k_contribution"], upd_params["start_time"])
 
         elif upd_type == "get_a_bonus":
-            envelopes["Cash"].append(
+            envelopes[params["to_key"]].append(
                 T(upd_params["start_time"], f_in, P({"a": upd_params["bonus"]}))
             )
 
-        # Add more `elif` cases as needed
-
-    # Final wrapped job function
+    # Add salary payments to cash envelope
     to_key = params["to_key"]
     envelopes[to_key].append(f_get_job(theta, params["start_time"]))
 
+    # Add 401(k) contributions if specified
+    contribution_amount = (params["salary"] / params["pay_period"]) * \
+        (params["p_401k_contribution"] + params["p_401k_match"])
+    
+    envelopes[params["p_401k_key"]].append(
+        R(
+            params["start_time"],
+            365 / params["pay_period"],
+            params["end_time"],
+            f_in,
+            P({"a": contribution_amount})
+        )
+    )
+
+def get_wage_job(event: dict, envelopes: dict):
+    """Handle a wage job event by adding wage payments and 401(k) contributions to specified envelopes."""
+    params = event["parameters"]
+
+    # Base wage parameters dictionary for P(...)
+    theta_base = {
+        "w": params["hourly_wage"],
+        "h": params["hours_per_week"],
+        "p": params["pay_period"],
+        "r_Fed": params["federal_income_tax"],
+        "r_SS": params["social_security_tax"],
+        "r_Med": params["medicare_tax"],
+        "r_401k": params["p_401k_contribution"],
+        "r_match": params["employer_match"],
+        "time_start": params["start_time"],
+        "time_end": params["end_time"],
+    }
+
+    # Compose the base theta(t)
+    theta = P(theta_base)
+
+    # Handle updating events
+    for upd in event.get("updating_events", []):
+        upd_type = upd["type"]
+        upd_params = upd.get("parameters", {})
+        
+        if upd_type == "get_a_raise":
+            theta = gamma(theta, {"w": upd_params["new_hourly_wage"]}, upd_params["start_time"])
+
+        elif upd_type == "change_hours":
+            theta = gamma(theta, {"h": upd_params["new_hours"]}, upd_params["start_time"])
+
+        elif upd_type == "change_401k_contribution":
+            theta = update_401k(theta, upd_params["p_401k_contribution"], upd_params["start_time"])
+
+        elif upd_type == "change_employer_match":
+            theta = gamma(theta, {"r_match": upd_params["new_match_rate"]}, upd_params["start_time"])
+
+    # Add wage payments to cash envelope
+    cash_key = params["to_key"]
+    envelopes[cash_key].append(f_get_wage_job(theta, params["start_time"]))
+
+    # Add 401(k) contributions if specified
+    contribution_amount = (params["hourly_wage"] * params["hours_per_week"] * 52 / params["pay_period"]) * (params["p_401k_contribution"] + params["employer_match"])
+    
+    # Add 401(k) contributions
+    envelopes[params["p_401k_key"]].append(
+        R(
+            params["start_time"],
+            365 / params["pay_period"],
+            params["end_time"],
+            f_in,
+            P({"a": contribution_amount})
+        )
+    )
+
 def purchase(event: dict, envelopes: dict):
     """Handle a purchase event by removing money from the specified envelope."""
-    params = event["parameters"]
+    params = event["parameters"]    
     
     # Create a one-time outflow function for the purchase
     purchase_func = T(
         params["start_time"],
-        f_out,
-        P({"b": params["money"]})
+        f_com,
+        P({"P": params["money"], "r": envelopes[params["from_key"]]["growth"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add the purchase function to the specified envelope
@@ -425,8 +529,8 @@ def gift(event: dict, envelopes: dict):
     # Create a one-time inflow function for the gift
     gift_func = T(
         params["start_time"],
-        f_in,
-        P({"a": params["money"]})
+        f_com,
+        P({"P": params["money"], "r": envelopes[params["from_key"]]["growth"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add the gift function to the specified envelope
@@ -440,8 +544,8 @@ def start_business(event: dict, envelopes: dict):
     # Initial investment (outflow)
     initial_investment = T(
         params["start_time"],
-        f_out,
-        P({"b": params["initial_investment"]})
+        f_com,
+        P({"P": -params["initial_investment"], "r": envelopes[params["from_key"]]["growth"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add initial investment to source envelope
@@ -459,8 +563,8 @@ def start_business(event: dict, envelopes: dict):
                 upd_params["start_time"],
                 30,  # Monthly interval
                 upd_params["end_time"],  # Continue indefinitely
-                f_in,
-                P({"a": upd_params["monthly_income"]})
+                f_com,
+                P({"P": params["monthly_income"], "r": envelopes[params["from_key"]]["growth"], "k": envelopes[params["from_key"]]["growth"]})
             )
             # Add to target envelope
             to_key = upd_params["to_key"]
@@ -470,8 +574,8 @@ def start_business(event: dict, envelopes: dict):
             # Create one-time loss function
             loss_func = T(
                 upd_params["start_time"],
-                f_out,
-                P({"b": upd_params["loss_amount"]})
+                f_com,
+                P({"P": -upd_params["loss_amount"], "r": envelopes[params["from_key"]]["growth"], "k": envelopes[params["from_key"]]["growth"]})
             )
             # Add to source envelope
             from_key = upd_params["from_key"]
@@ -486,8 +590,8 @@ def retirement(event: dict, envelopes: dict):
         params["start_time"],
         params["frequency_days"],
         params["end_time"],
-        f_out,
-        P({"b": params["amount"]})
+        f_com,
+        P({"P": params["amount"], "r": envelopes[params["from_key"]]["growth"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add withdrawal function to source envelope
@@ -885,8 +989,8 @@ def buy_life_insurance(event: dict, envelopes: dict):
         params["start_time"],
         30,  # Monthly interval
         params["start_time"] + params["term_years"] * 365,  # End at term completion
-        f_out,
-        P({"b": params["monthly_premium"]})
+        f_com,
+        P({"P": -params["monthly_premium"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add premium payments to source envelope
@@ -904,8 +1008,8 @@ def buy_life_insurance(event: dict, envelopes: dict):
                 upd_params["start_time"],
                 30,  # Monthly interval
                 params["start_time"] + params["term_years"] * 365,  # End at term completion
-                f_out,
-                P({"b": upd_params["new_monthly_premium"]})
+                f_com,
+                P({"P": -params["new_monthly_premium"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
             )
             envelopes[from_key].append(new_premium_func)
 
@@ -918,8 +1022,8 @@ def receive_government_aid(event: dict, envelopes: dict):
         params["start_time"],
         params["frequency_days"],
         params["start_time"] + params["end_days"],
-        f_in,
-        P({"a": params["amount"]})
+        f_com,
+        P({"P": params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
     )
     
     # Add aid payments to target envelope
@@ -933,8 +1037,8 @@ def invest_money(event: dict, envelopes: dict):
     # Handle initial investment (outflow)
     initial_investment = T(
         params["start_time"],
-        f_out,
-        P({"b": params["amount"]})
+        f_com,
+        P({"P": -params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
     )
     
     # Add initial investment to source envelope
@@ -945,7 +1049,8 @@ def invest_money(event: dict, envelopes: dict):
     investment_func = f_com(
         P({
             "P": params["amount"],
-            "r": params["expected_return"]
+            "r": envelopes[params["to_key"]]["rate"],
+            "k": envelopes[params["to_key"]]["growth"]
         }),
         params["start_time"]
     )
@@ -963,8 +1068,8 @@ def invest_money(event: dict, envelopes: dict):
             # Handle dividend payments
             dividend_func = T(
                 upd_params["start_time"],
-                f_in,
-                P({"a": upd_params["amount"]})
+                f_com,
+                P({"P": params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
             )
             envelopes[upd_params["to_key"]].append(dividend_func)
             
@@ -974,8 +1079,8 @@ def invest_money(event: dict, envelopes: dict):
                 upd_params["start_time"],
                 30,  # Monthly interval
                 upd_params["end_time"],
-                f_out,
-                P({"b": upd_params["amount"]})
+                f_com,
+                P({"P": -params["amount"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
             )
             envelopes[upd_params["from_key"]].append(contribution_func)
             
@@ -983,7 +1088,8 @@ def invest_money(event: dict, envelopes: dict):
             new_investment_func = f_com(
                 P({
                     "P": upd_params["amount"],
-                    "r": params["expected_return"]
+                    "r": envelopes[params["to_key"]]["rate"],
+                    "k": envelopes[params["to_key"]]["growth"]
                 }),
                 upd_params["start_time"]
             )
@@ -996,8 +1102,8 @@ def high_yield_savings_account(event: dict, envelopes: dict):
     # Handle initial deposit (outflow)
     initial_deposit = T(
         params["start_time"],
-        f_out,
-        P({"b": params["amount"]})
+        f_com,
+        P({"P": -params["amount"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add initial deposit to source envelope
@@ -1008,7 +1114,8 @@ def high_yield_savings_account(event: dict, envelopes: dict):
     savings_func = f_com(
         P({
             "P": params["amount"],
-            "r": params["interest_rate"]
+            "r": envelopes[params["to_key"]]["rate"],
+            "k": envelopes[params["to_key"]]["growth"]
         }),
         params["start_time"]
     )
@@ -1024,8 +1131,8 @@ def pay_taxes(event: dict, envelopes: dict):
     # Handle tax payment (outflow)
     tax_payment = T(
         params["start_time"],
-        f_out,
-        P({"b": params["total_tax_due"]})
+        f_com,
+        P({"P": -params["total_tax_due"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
     )
     
     # Add tax payment to source envelope
@@ -1041,8 +1148,8 @@ def pay_taxes(event: dict, envelopes: dict):
             # Handle tax refund (inflow)
             refund_func = T(
                 upd_params["start_time"],
-                f_in,
-                P({"a": upd_params["amount"]})
+                f_com,
+                P({"P": params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
             )
             envelopes[upd_params["to_key"]].append(refund_func)
 
@@ -1055,8 +1162,8 @@ def buy_groceries(event: dict, envelopes: dict):
         params["start_time"],
         30,  # Monthly interval
         params["start_time"] + params["end_days"],
-        f_out,
-        P({"b": params["monthly_amount"]})
+        f_com,
+        P({"P": -params["monthly_amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
     )
     
     # Add grocery payments to source envelope
@@ -1074,8 +1181,8 @@ def buy_groceries(event: dict, envelopes: dict):
                 upd_params["start_time"],
                 30,  # Monthly interval
                 params["start_time"] + params["end_days"],
-                f_out,
-                P({"b": upd_params["new_amount"]})
+                f_com,
+                P({"P": -params["new_amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
             )
             envelopes[from_key].append(new_grocery_func)
 
@@ -1084,22 +1191,92 @@ def manual_correction(event: dict, envelopes: dict):
     params = event["parameters"]
     to_key = params["to_key"]
     
-    # Apply point correction at the specified time
-    correction_func = D(
-        params["start_time"],
-        f_in if params["amount"] > 0 else f_out,
-        P({"a": abs(params["amount"])})
-    )
-    envelopes[to_key].append(correction_func)
+    simulated_value = 0.0
+    for func in envelopes[to_key]["functions"]:
+        simulated_value += func(params["start_time"])
+    difference = params["amount"] - simulated_value
+    print("Difference applied:", difference)
     
-    # For investment-type accounts (not Cash), apply compounding after correction
-    if to_key not in ["Cash"]:
-        # Create compounding function starting after correction
-        compound_func = f_com(
-            P({
-                "P": params["amount"],
-                "r": params["rate"]
-            }),
-            params["start_time"]
-        )
-        envelopes[to_key].append(compound_func)
+    # Create the correction function and append it to the envelope
+    correction_func = T(
+        params["start_time"],
+        f_com,
+        P({"P": difference, "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
+    )
+    envelopes[params["to_key"]]["functions"].append(correction_func)
+
+def transfer_money(event: dict, envelopes: dict):
+    """Transfer money between envelopes with optional growth rate for destination."""
+    params = event["parameters"]
+    
+    # Create outflow function for source envelope with growth
+    outflow_func = T(
+        params["start_time"],
+        f_com,
+        P({"P": params["amount"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
+    )
+    envelopes[params["from_key"]].append(outflow_func)
+    
+    # Create inflow function for destination envelope with growth
+    inflow_func = T(
+        params["start_time"],
+        f_com,
+        P({"P": params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
+    )
+    envelopes[params["to_key"]].append(inflow_func)
+
+def reoccuring_income(event: dict, envelopes: dict):
+    """Handle recurring income events by adding recurring inflows to an envelope."""
+    params = event["parameters"]
+    
+    # Create recurring income function
+    income_func = R(
+        params["start_time"],
+        params["frequency_days"],
+        params["end_days"],
+        f_com,
+        P({"P": params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
+    )
+    
+    envelopes[params["to_key"]]["functions"].append(income_func)
+
+def reoccuring_spending(event: dict, envelopes: dict):
+    """Handle recurring spending events by adding recurring outflows from an envelope."""
+    params = event["parameters"]
+    
+    # Create recurring spending function
+    spending_func = R(
+        params["start_time"],
+        params["frequency_days"],
+        params["end_days"],
+        f_com,
+        P({"P": -params["amount"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
+    )
+    
+    envelopes[params["from_key"]]["functions"].append(spending_func)
+
+def reoccuring_transfer(event: dict, envelopes: dict):
+    """Handle recurring transfer events by adding recurring outflows from one envelope and inflows to another."""
+    params = event["parameters"]
+    
+    # Outflow from source envelope
+    outflow_func = R(
+        params["start_time"],
+        params["frequency_days"],
+        params["end_days"],
+        f_com,
+        P({"P": -params["amount"], "r": envelopes[params["from_key"]]["rate"], "k": envelopes[params["from_key"]]["growth"]})
+    )
+    
+    envelopes[params["from_key"]]["functions"].append(outflow_func)
+    
+    # Inflow to destination envelope
+    inflow_func = R(
+        params["start_time"],
+        params["frequency_days"],
+        params["end_days"],
+        f_com,
+        P({"P": params["amount"], "r": envelopes[params["to_key"]]["rate"], "k": envelopes[params["to_key"]]["growth"]})
+    )
+    envelopes[params["to_key"]]["functions"].append(inflow_func)
+

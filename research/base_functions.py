@@ -47,7 +47,7 @@ def evaluate_results(envelopes: Dict[str, List[Callable]], start_day: int, end_d
     results = {key: np.zeros_like(t_range, dtype=float) for key in envelopes}
     
     for key in envelopes:
-        for func in envelopes[key]:
+        for func in envelopes[key]["functions"]:
             results[key] += np.array([func(t) for t in t_range])
     
     # Apply inflation adjustment if parameters are provided
@@ -72,12 +72,40 @@ def show_visual(results: Dict[str, np.ndarray], t_range: np.ndarray):
     for key in results:
         labels.append(key)
 
-    plt.figure(figsize=(12, 6))
-    plt.stackplot(t_range / 365, *results.values(), labels=labels)
-    plt.plot(t_range / 365, total_net_worth, 'k--', label='Total Net Worth')
+    plt.figure(figsize=(12, 8))
+    
+    # Separate positive and negative values for proper stacking
+    positive_data = []
+    negative_data = []
+    positive_labels = []
+    negative_labels = []
+    
+    for key, values in results.items():
+        if np.any(values > 0):
+            positive_data.append(np.maximum(values, 0))
+            positive_labels.append(f"{key} (positive)")
+        if np.any(values < 0):
+            negative_data.append(np.minimum(values, 0))
+            negative_labels.append(f"{key} (negative)")
+    
+    # Plot positive values (stacked above x-axis)
+    if positive_data:
+        plt.stackplot(t_range / 365, positive_data, labels=positive_labels, alpha=0.7)
+    
+    # Plot negative values (stacked below x-axis)
+    if negative_data:
+        plt.stackplot(t_range / 365, negative_data, labels=negative_labels, alpha=0.7)
+    
+    # Plot total net worth
+    plt.plot(t_range / 365, total_net_worth, 'k--', linewidth=2, label='Total Net Worth')
+    
+    # Add horizontal line at y=0 for reference
+    plt.axhline(y=0, color='black', linestyle='-', alpha=0.3, linewidth=0.5)
+    
     plt.title('Net Worth Composition Over Time')
     plt.xlabel('Time (Years)')
     plt.ylabel('Value ($)')
-    plt.legend()
-    plt.grid(True)
+    plt.legend(bbox_to_anchor=(1.05, 1), loc='upper left')
+    plt.grid(True, alpha=0.3)
+    plt.tight_layout()
     plt.show()
